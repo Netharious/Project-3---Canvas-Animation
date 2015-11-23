@@ -19,8 +19,6 @@
 				} );
 			}
 			
-			
-			
 			var mouse = { x: 0, y: 0 };
 			
 			var canvas = document.getElementById('canvasElement');
@@ -40,14 +38,50 @@
 					handleClick(event.clientX, event.clientY);
 				};
 				
+				canvas.ondblclick = function(event) {
+					handleClick(event.clientX, event.clientY);
+				};
+				
 				context.beginPath();
 				
 				ResizeCanvas();
 			}
 			
+			canvas.onclick = function drawCloud(e){
+			context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+				context.beginPath();
+				context.moveTo(170, 80);
+				context.bezierCurveTo(130, 100, 130, 150, 230, 150);
+				context.bezierCurveTo(250, 180, 320, 180, 340, 150);
+				context.bezierCurveTo(420, 150, 420, 120, 390, 100);
+				context.bezierCurveTo(430, 40, 370, 30, 340, 50);
+				context.bezierCurveTo(320, 5, 250, 20, 250, 50);
+				context.bezierCurveTo(200, 5, 150, 20, 170, 80);
+				context.closePath();
+				context.lineWidth = 1;
+				context.strokeStyle = 'blue';
+				context.stroke();
+			}
+			
+			canvas.ondblclick = function drawbubble(e) {
+			var messages2 = ['Find the secret messages!', 'Find secret messages!'];
+				context.beginPath();
+				context.moveTo(30,25);
+				context.quadraticCurveTo(25,25,25,62.5);
+				context.quadraticCurveTo(25,100,50,100);
+				context.quadraticCurveTo(50,120,30,125);
+				context.quadraticCurveTo(60,120,65,100);
+				context.quadraticCurveTo(125,100,125,62.5);
+				context.quadraticCurveTo(125,25,75,25);
+				context.textBaseline = 'top';
+					context.font = '10pt sans-serif';
+					context.fillText(messages2[i], 75, 30);
+				context.stroke();
+				context.closePath();
+			}
+			
 			function TimeUpdate(e) {
-				
-				var colors = ['red', 'green', 'blue', 'orange', 'purple', 'magenta', 'cyan'];
+				var colors = ['red', 'green', 'cyan', 'orange', 'purple', 'magenta', 'blue'];
 				var messages = ['Hello', 'How are you doing?', 'Do you like this?', 'Jon dies in end', 'Found all txt?', 'This might be good...', 'Mesmerizing'];
 				context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 				
@@ -122,12 +156,12 @@
 					context.closePath();
 					context.fill();
 					
+					
 				}
 			}
 			
-			function movingCloud(e){
-				
-			}
+			
+			
 			function MouseMove(e) {
 				mouse.x = e.clientX;
 				mouse.y = e.clientY;
