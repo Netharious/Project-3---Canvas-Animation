@@ -45,6 +45,19 @@
 				} );
 			}
 			
+			var particles4 = [];
+			for( var i = 0; i < 1; i++ ) {
+				particles4.push( { 
+					x:Math.random()*window.innerWidth, 
+					y:Math.random()*window.innerHeight, 
+					vx:(Math.random()*2)-1, 
+					vy:(Math.random()*2-1),
+					history: [],
+					size: 4+Math.random()*6,
+					color: Math.random() > .5 ? "#000000" : Math.random() > .5 ? "#FF0000" : "#4682B4"
+				} );
+			}
+			
 			var mouse = { x: 0, y: 0 };
 			
 			var canvas = document.getElementById('canvasElement');
@@ -61,10 +74,9 @@
 				setInterval( TimeUpdate, 15 );
 				setInterval( drawCloud, 15);
 				setInterval( drawbubble, 15);
+				setInterval( drawbubbles, 15);
 				
-				canvas.onclick = function(event) {
-					handleClick(event.clientX, event.clientY);
-				};
+				
 				
 				
 				context.beginPath();
@@ -116,6 +128,7 @@
 					context.lineWidth = 2;
 					context.strokeStyle = colors[i];
 					context.stroke();
+					
 				}
 			}
 			
@@ -184,30 +197,59 @@
 			}
 		};
 			
-			canvas.onclick = function drawbubbles(e) {
+			function drawbubbles(e) {
+				for( var i = 0; i < particles4.length; i++ ) {
+						particles4[i].x += particles4[i].vx;
+						particles4[i].y += particles4[i].vy;
+					
+						if( particles4[i].x > window.innerWidth ) {
+							particles4[i].vx = -1-Math.random();
+						}
+						else if ( particles4[i].x < 0 ) {
+							particles4[i].vx = 1+Math.random();
+						}
+						else {
+							particles4[i].vx *= 1 + (Math.random()*0.005);
+						}
+					
+						if( particles4[i].y > window.innerHeight ) {
+							particles4[i].vy = -1-Math.random();
+						}
+						else if ( particles4[i].y < 0 ) {
+							particles4[i].vy = 1+Math.random();
+						}
+						else {
+							particles4[i].vy *= 1 + (Math.random()*0.005);
+						}
+						
 				context.beginPath();
 				//x: 30; y: 25
-				context.moveTo(particles2[i].x, particles2[i].y);
+				context.moveTo(particles4[i].x, particles4[i].y);
 				//X1: 25; y1: 25; x2: 25; y2: 62.5
-				context.quadraticCurveTo(particles2[i].x-5, particles2[i].y, particles2[i].x-5, particles2[i].y+37.5);
+				context.quadraticCurveTo(particles4[i].x-5, particles4[i].y, particles4[i].x-5, particles4[i].y+37.5);
 				// 25, 100, 50, 100
-				context.quadraticCurveTo(particles2[i].x-5, particles2[i].y+75, particles2[i].x+20, particles2[i].y+75);
+				context.quadraticCurveTo(particles4[i].x-5, particles4[i].y+75, particles4[i].x+20, particles4[i].y+75);
 				//50, 120, 30, 125
-				context.quadraticCurveTo(particles2[i].x+20, particles2[i].y+95, particles2[i].x, particles2[i].y+100);
+				context.quadraticCurveTo(particles4[i].x+20, particles4[i].y+95, particles4[i].x, particles4[i].y+100);
 				//60, 120, 65, 100
-				context.quadraticCurveTo(particles2[i].x+30, particles2[i].y+95, particles2[i].x+35, particles2[i].y+75);
+				context.quadraticCurveTo(particles4[i].x+30, particles4[i].y+95, particles4[i].x+35, particles4[i].y+75);
 				//185, 100, 185, 62.5
-				context.quadraticCurveTo(particles2[i].x+155, particles2[i].y+75, particles2[i].x+155, particles2[i].y+37.5);
+				context.quadraticCurveTo(particles4[i].x+155, particles4[i].y+75, particles4[i].x+155, particles4[i].y+37.5);
 				//185, 25, 75, 25
-				context.quadraticCurveTo(particles2[i].x+155, particles2[i].y, particles2[i].x+45, particles2[i].y);
+				context.quadraticCurveTo(particles4[i].x+155, particles4[i].y, particles4[i].x+45, particles4[i].y);
 				//75, 25, 30, 25
-				context.quadraticCurveTo(particles2[i].x+45, particles2[i].y, particles2[i].x, particles2[i].y);
+				context.quadraticCurveTo(particles4[i].x+45, particles4[i].y, particles4[i].x, particles4[i].y);
 				context.textBaseline = 'top';
 					context.font = '10pt sans-serif';
-					context.fillText('Find all messages!', particles2[i].x, particles2[i].y+5);
+					context.fillText('Find all messages!', particles4[i].x, particles4[i].y+5);
 				context.stroke();
 				context.closePath();
-			}
+				
+				for( var j = 0; j < particles4[i].history.length; j++ ) {
+						context.lineTo( particles4[i].history[j].x, particles4[i].history[j].y );
+					}
+				}
+			}	
 			
 			function TimeUpdate(e) {
 				var colors = ['red', 'green', 'cyan', 'orange', 'purple', 'magenta', 'blue'];
