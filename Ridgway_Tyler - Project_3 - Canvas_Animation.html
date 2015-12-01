@@ -7,8 +7,34 @@
 <canvas id="canvasElement" width="800" height="1000">Your browser does not support the Canvas element.</canvas>
 		<script>
 			var particles = [];
-			for( var i = 0; i < 30; i++ ) {
+			for( var i = 0; i < 20; i++ ) {
 				particles.push( { 
+					x:Math.random()*window.innerWidth, 
+					y:Math.random()*window.innerHeight, 
+					vx:(Math.random()*2)-1, 
+					vy:(Math.random()*2-1),
+					history: [],
+					size: 4+Math.random()*6,
+					color: Math.random() > .5 ? "#000000" : Math.random() > .5 ? "#FF0000" : "#4682B4"
+				} );
+			}
+			
+			var particles2 = [];
+			for( var i = 0; i < 10; i++ ) {
+				particles2.push( { 
+					x:Math.random()*window.innerWidth, 
+					y:Math.random()*window.innerHeight, 
+					vx:(Math.random()*2)-1, 
+					vy:(Math.random()*2-1),
+					history: [],
+					size: 4+Math.random()*6,
+					color: Math.random() > .5 ? "#000000" : Math.random() > .5 ? "#FF0000" : "#4682B4"
+				} );
+			}
+			
+			var particles3 = [];
+			for( var i = 0; i < 5; i++ ) {
+				particles3.push( { 
 					x:Math.random()*window.innerWidth, 
 					y:Math.random()*window.innerHeight, 
 					vx:(Math.random()*2)-1, 
@@ -33,56 +59,159 @@
 				canvas.addEventListener('mousemove', MouseMove, false);
 				window.addEventListener('resize', ResizeCanvas, false);
 				setInterval( TimeUpdate, 15 );
+				setInterval( drawCloud, 15);
+				setInterval( drawbubble, 15);
 				
 				canvas.onclick = function(event) {
 					handleClick(event.clientX, event.clientY);
 				};
 				
-				canvas.ondblclick = function(event) {
-					handleClick(event.clientX, event.clientY);
-				};
 				
 				context.beginPath();
 				
 				ResizeCanvas();
 			}
 			
-			canvas.onclick = function drawCloud(e){
-			context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-				context.beginPath();
-				context.moveTo(170, 80);
-				context.bezierCurveTo(130, 100, 130, 150, 230, 150);
-				context.bezierCurveTo(250, 180, 320, 180, 340, 150);
-				context.bezierCurveTo(420, 150, 420, 120, 390, 100);
-				context.bezierCurveTo(430, 40, 370, 30, 340, 50);
-				context.bezierCurveTo(320, 5, 250, 20, 250, 50);
-				context.bezierCurveTo(200, 5, 150, 20, 170, 80);
-				context.closePath();
-				context.lineWidth = 1;
-				context.strokeStyle = 'blue';
-				context.stroke();
+			function drawCloud(cloud) {
+				var colors = ['red', 'green', 'cyan', 'orange', 'purple', 'magenta', 'blue'];
+				  for( var i = 0; i < particles2.length; i++ ) {
+					particles2[i].x += particles2[i].vx;
+					particles2[i].y += particles2[i].vy;
+					
+					if( particles2[i].x > window.innerWidth ) {
+						particles2[i].vx = -1-Math.random();
+					}
+					else if ( particles2[i].x < 0 ) {
+						particles2[i].vx = 1+Math.random();
+					}
+					else {
+						particles2[i].vx *= 1 + (Math.random()*0.005);
+					}
+					
+					if( particles2[i].y > window.innerHeight ) {
+						particles2[i].vy = -1-Math.random();
+					}
+					else if ( particles2[i].y < 0 ) {
+						particles2[i].vy = 1+Math.random();
+					}
+					else {
+						particles2[i].vy *= 1 + (Math.random()*0.005);
+					}
+					
+					context.beginPath();
+					context.moveTo(particles2[i].x, particles2[i].y);
+					context.bezierCurveTo(particles2[i].x-65, particles2[i].y+30, particles2[i].x-65, particles2[i].y+80, particles2[i].x+60, particles2[i].y+80);
+					context.bezierCurveTo(particles2[i].x+80, particles2[i].y+40, particles2[i].x+130, particles2[i].y+40, particles2[i].x+130, particles2[i].y+80);
+					context.bezierCurveTo(particles2[i].x+200, particles2[i].y+80, particles2[i].x+200, particles2[i].y+40, particles2[i].x+200, particles2[i].y+30);
+					context.bezierCurveTo(particles2[i].x+210, particles2[i].y-40, particles2[i].x+200, particles2[i].y+50, particles2[i].x+170, particles2[i].y-85);
+					context.bezierCurveTo(particles2[i].x+150, particles2[i].y-75, particles2[i].x+80, particles2[i].y-60, particles2[i].x+80, particles2[i].y-85);
+					context.bezierCurveTo(particles2[i].x+30, particles2[i].y-75, particles2[i].x+130, particles2[i].y-60, particles2[i].x, particles2[i].y);
+					
+					for( var j = 0; j < particles2[i].history.length; j++ ) {
+						context.lineTo( particles2[i].history[j].x, particles2[i].history[j].y );
+					}
+					
+					// complete custom shape
+					context.closePath();
+					context.lineWidth = 2;
+					context.strokeStyle = colors[i];
+					context.stroke();
+				}
 			}
 			
-			canvas.ondblclick = function drawbubble(e) {
-			var messages2 = ['Find the secret messages!', 'Find secret messages!'];
+		function drawbubble(e) {	
+			for( var i = 0; i < particles3.length; i++ ) {
+					particles3[i].x += particles3[i].vx;
+					particles3[i].y += particles3[i].vy;
+					
+					if( particles3[i].x > window.innerWidth ) {
+						particles3[i].vx = -1-Math.random();
+					}
+					else if ( particles3[i].x < 0 ) {
+						particles3[i].vx = 1+Math.random();
+					}
+					else {
+						particles3[i].vx *= 1 + (Math.random()*0.005);
+					}
+					
+					if( particles3[i].y > window.innerHeight ) {
+						particles3[i].vy = -1-Math.random();
+					}
+					else if ( particles3[i].y < 0 ) {
+						particles3[i].vy = 1+Math.random();
+					}
+					else {
+						particles3[i].vy *= 1 + (Math.random()*0.005);
+					}
+					
+				context.strokeStyle = '#0000FF';
+				context.fillStyle = '#FFFF00';
+				context.lineWidth = 4;
 				context.beginPath();
-				context.moveTo(30,25);
-				context.quadraticCurveTo(25,25,25,62.5);
-				context.quadraticCurveTo(25,100,50,100);
-				context.quadraticCurveTo(50,120,30,125);
-				context.quadraticCurveTo(60,120,65,100);
-				context.quadraticCurveTo(125,100,125,62.5);
-				context.quadraticCurveTo(125,25,75,25);
+				context.arc(particles3[i].x, particles3[i].y,50,0*Math.PI,2*Math.PI,true);
+				//x: 100; y: 75
+				context.closePath();
+				context.stroke();
+				context.fill();
+ 
+				context.strokeStyle = '#000000';
+				context.lineWidth = 2;
+				context.beginPath();
+				context.arc(particles3[i].x, particles3[i].y-10, 40, 0.2*Math.PI,0.8*Math.PI,false);
+				//context.closePath(); 
+				context.stroke();
+				//context.fill();
+				
+				context.strokeStyle = '#000000';
+				context.fillStyle = '#000000';
+				context.beginPath();
+				context.arc(particles3[i].x-20, particles3[i].y-15, 5, 0*Math.PI,2*Math.PI,false);
+				context.closePath();
+				context.stroke();
+				context.fill();
+ 
+				context.strokeStyle = '#000000';
+				context.fillStyle = '#000000';
+				context.beginPath();
+				context.arc(particles3[i].x+20, particles3[i].y-15, 5, 0*Math.PI,2*Math.PI,false);
+				context.closePath();
+				context.stroke();
+				context.fill();
+				
+					for( var j = 0; j < particles3[i].history.length; j++ ) {
+						context.lineTo( particles3[i].history[j].x, particles3[i].history[j].y );
+					}
+			}
+		};
+			
+			canvas.onclick = function drawbubbles(e) {
+				context.beginPath();
+				//x: 30; y: 25
+				context.moveTo(particles2[i].x, particles2[i].y);
+				//X1: 25; y1: 25; x2: 25; y2: 62.5
+				context.quadraticCurveTo(particles2[i].x-5, particles2[i].y, particles2[i].x-5, particles2[i].y+37.5);
+				// 25, 100, 50, 100
+				context.quadraticCurveTo(particles2[i].x-5, particles2[i].y+75, particles2[i].x+20, particles2[i].y+75);
+				//50, 120, 30, 125
+				context.quadraticCurveTo(particles2[i].x+20, particles2[i].y+95, particles2[i].x, particles2[i].y+100);
+				//60, 120, 65, 100
+				context.quadraticCurveTo(particles2[i].x+30, particles2[i].y+95, particles2[i].x+35, particles2[i].y+75);
+				//185, 100, 185, 62.5
+				context.quadraticCurveTo(particles2[i].x+155, particles2[i].y+75, particles2[i].x+155, particles2[i].y+37.5);
+				//185, 25, 75, 25
+				context.quadraticCurveTo(particles2[i].x+155, particles2[i].y, particles2[i].x+45, particles2[i].y);
+				//75, 25, 30, 25
+				context.quadraticCurveTo(particles2[i].x+45, particles2[i].y, particles2[i].x, particles2[i].y);
 				context.textBaseline = 'top';
 					context.font = '10pt sans-serif';
-					context.fillText(messages2[i], 75, 30);
+					context.fillText('Find all messages!', particles2[i].x, particles2[i].y+5);
 				context.stroke();
 				context.closePath();
 			}
 			
 			function TimeUpdate(e) {
 				var colors = ['red', 'green', 'cyan', 'orange', 'purple', 'magenta', 'blue'];
-				var messages = ['Hello', 'How are you doing?', 'Do you like this?', 'Jon dies in end', 'Found all txt?', 'This might be good...', 'Mesmerizing'];
+				var messages = ['Hello', 'How are you doing?', 'Do you like this?', 'Jon dies in end', 'Found all txt?', 'This might be good...', 'Mesmerizing', 'Find messages!'];
 				context.clearRect(0, 0, window.innerWidth, window.innerHeight);
 				
 				for( var i = 0; i < particles.length; i++ ) {
@@ -144,7 +273,7 @@
 					}
 					particles.xVel += forceDirection.x * force;
 					particles.yVel += forceDirection.y * force;
-				
+					
 					context.fillStyle = particles[i].color;
 					context.beginPath();
 					context.arc(particles[i].x,particles[i].y,particles[i].size*distanceFactor,0,Math.PI*2,true);
@@ -179,8 +308,8 @@
 			}
 			
 			function ResizeCanvas(e) {
-				canvas.width = window.innerWidth;
-				canvas.height = window.innerHeight;
+				canvas.width = window.innerWidth-20;
+				canvas.height = window.innerHeight-20;
 			}
 			
 			function DistanceBetween(p1,p2) {
